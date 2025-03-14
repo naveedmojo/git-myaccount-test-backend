@@ -1,0 +1,11 @@
+[90m= [39m[34;4mApp\Models\Product[39;24m {#5381
+    [34mname[39m: "[32mPlayStation 5[39m",
+    [34mcategory_id[39m: [35m2[39m,
+    [34mprice[39m: [35m49990[39m,
+    [34mdescription[39m: "[32mLatest PS5 console with ultra-fast SSD.[39m",
+    [34mimage[39m: "[32mstorage/products/ps5.jpg[39m",
+    [34mupdated_at[39m: "[32m2025-03-14 11:17:31[39m",
+    [34mcreated_at[39m: "[32m2025-03-14 11:17:31[39m",
+    [34mid[39m: [35m3[39m,
+  }
+
