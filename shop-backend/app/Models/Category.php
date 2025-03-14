@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     
-    protected $fillable = ['name'];
+    protected $fillable = ['name','stock'];
 
     // Define relationship: One category has many products
     public function products()
