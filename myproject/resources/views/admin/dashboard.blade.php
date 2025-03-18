@@ -1,11 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <style>
         /* Sidebar Styling */
         .sidebar {
@@ -16,7 +19,7 @@
             left: 0;
             background-color: #343a40;
             padding-top: 20px;
-            transition: all 0.3s;
+            transition: 0.3s ease-in-out;
         }
         .sidebar a {
             padding: 10px 20px;
@@ -32,6 +35,7 @@
         .content {
             margin-left: 250px;
             padding: 20px;
+            transition: 0.3s ease-in-out;
         }
         .menu-toggle {
             display: none;
@@ -56,10 +60,19 @@
         @media screen and (max-width: 768px) {
             .sidebar {
                 width: 0;
+                position: fixed;
+                height: 100vh;
+                z-index: 1000;
                 overflow: hidden;
+            }
+            .sidebar.open {
+                width: 250px;
             }
             .content {
                 margin-left: 0;
+            }
+            .content.shift {
+                margin-left: 250px;
             }
             .menu-toggle {
                 display: block;
@@ -77,11 +90,11 @@
 
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <a href="#" onclick="showSection('dashboard')" class="active">Dashboard</a>
-        <a href="#" onclick="showSection('products')">Products</a>
-        <a href="#" onclick="showSection('categories')">Categories</a>
-        <a href="#" onclick="showSection('messages')">Messages</a>
-        <a href="#" onclick="showSection('reports')">Reports</a>
+        <a href="#" onclick="showSection('dashboard', event)" class="active">Dashboard</a>
+        <a href="#" onclick="showSection('products', event)">Products</a>
+        <a href="#" onclick="showSection('categories', event)">Categories</a>
+        <a href="#" onclick="showSection('messages', event)">Messages</a>
+        <a href="#" onclick="showSection('reports', event)">Reports</a>
 
         <!-- Logout Form -->
         <form method="POST" action="{{ route('admin.logout') }}" id="logout-form">
@@ -163,16 +176,15 @@
     <script>
         document.querySelector(".menu-toggle").addEventListener("click", function() {
             let sidebar = document.getElementById("sidebar");
-            sidebar.style.width = sidebar.style.width === "250px" ? "0" : "250px";
+            let content = document.querySelector(".content");
+
+            sidebar.classList.toggle("open");
+            content.classList.toggle("shift");
         });
 
-        function showSection(section) {
+        function showSection(section, event) {
             // Hide all sections
-            document.getElementById("dashboard-section").style.display = "none";
-            document.getElementById("products-section").style.display = "none";
-            document.getElementById("categories-section").style.display = "none";
-            document.getElementById("messages-section").style.display = "none";
-            document.getElementById("reports-section").style.display = "none";
+            document.querySelectorAll(".content > div").forEach(div => div.style.display = "none");
 
             // Show the selected section
             document.getElementById(section + "-section").style.display = "block";
@@ -181,7 +193,7 @@
             document.querySelectorAll(".sidebar a").forEach(link => link.classList.remove("active"));
 
             // Add active class to clicked link
-            event.target.classList.add("active");
+            if (event) event.target.classList.add("active");
         }
     </script>
 

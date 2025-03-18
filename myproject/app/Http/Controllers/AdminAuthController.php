@@ -7,6 +7,8 @@ use App\Models\Admin;
 
 class AdminAuthController extends Controller
 {
+    
+    
     public function showLoginForm()
     {
         return view('admin.auth.login');
@@ -29,16 +31,19 @@ class AdminAuthController extends Controller
         return back()->withErrors(['password' => 'Incorrect password.'])->withInput();
     }
 
-    // Flash success message
+  
     return redirect()->route('admin.dashboard')->with('success', 'Login successful! Welcome back.');
 }
 
-    
+public function logout(Request $request)
+{
+    Auth::guard('admin')->logout();
 
+    // Ensure session is cleared properly
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-    public function logout()
-    {
-        Auth::guard('admin')->logout();
-        return redirect()->route('admin.login');
-    }
+    return redirect()->route('login'); // Ensure this matches your named route
+}
+
 }
