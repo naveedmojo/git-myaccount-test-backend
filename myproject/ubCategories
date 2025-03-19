@@ -1,0 +1,43 @@
+[90m= [39m[34;4mApp\Models\MainCategory[39;24m {#6182
+    [34mid[39m: [35m1[39m,
+    [34mname[39m: "[32mPS4[39m",
+    [34mdescription[39m: "[32mPlayStation 4 products[39m",
+    [34mimage[39m: "[32mps4.jpg[39m",
+    [34mcreated_at[39m: "[32m2025-03-19 09:03:27[39m",
+    [34mupdated_at[39m: "[32m2025-03-19 09:03:27[39m",
+    [34msubCategories[39m: [34;4mIlluminate\Database\Eloquent\Collection[39;24m {#6192
+      [34mall[39m: [
+        [34;4mApp\Models\SubCategory[39;24m {#6191
+          [34mid[39m: [35m1[39m,
+          [34mname[39m: "[32mConsoles[39m",
+          [34mmain_category_id[39m: [35m1[39m,
+          [34mstock[39m: [35m10[39m,
+          [34mdescription[39m: "[32mPS4 Consoles[39m",
+          [34mimage[39m: "[32mps4_console.jpg[39m",
+          [34mcreated_at[39m: "[32m2025-03-19 09:03:27[39m",
+          [34mupdated_at[39m: "[32m2025-03-19 09:03:27[39m",
+        },
+        [34;4mApp\Models\SubCategory[39;24m {#6193
+          [34mid[39m: [35m2[39m,
+          [34mname[39m: "[32mGames[39m",
+          [34mmain_category_id[39m: [35m1[39m,
+          [34mstock[39m: [35m50[39m,
+          [34mdescription[39m: "[32mPS4 Games[39m",
+          [34mimage[39m: "[32mps4_games.jpg[39m",
+          [34mcreated_at[39m: "[32m2025-03-19 09:03:27[39m",
+          [34mupdated_at[39m: "[32m2025-03-19 09:03:27[39m",
+        },
+        [34;4mApp\Models\SubCategory[39;24m {#6194
+          [34mid[39m: [35m3[39m,
+          [34mname[39m: "[32mAccessories[39m",
+          [34mmain_category_id[39m: [35m1[39m,
+          [34mstock[39m: [35m20[39m,
+          [34mdescription[39m: "[32mPS4 Accessories[39m",
+          [34mimage[39m: "[32mps4_accessories.jpg[39m",
+          [34mcreated_at[39m: "[32m2025-03-19 09:03:27[39m",
+          [34mupdated_at[39m: "[32m2025-03-19 09:03:27[39m",
+        },
+      ],
+    },
+  }
+
