@@ -145,7 +145,7 @@ class CategoryController extends Controller
             ], 500);
         } 
         }
-    public function substore(){
+    public function substore(Request $request){
         try {
             // Validate request
             $request->validate([
@@ -185,7 +185,7 @@ class CategoryController extends Controller
             ], 500);
         }
         }
-    public function subupdate(){
+    public function subupdate(Request $request,$id){
         try {
             $subcategory = SubCategory::findOrFail($id);
     

@@ -29,7 +29,7 @@ Route::prefix('admin')->group(function () {
             Route::post('/main/update/{id}', [CategoryController::class, 'mainupdate'])->name('admin.maincategories.update'); // Update main category
             Route::delete('/main/delete/{id}', [CategoryController::class, 'maindestroy'])->name('admin.maincategories.delete'); // Delete main category
             Route::get('/sub', [CategoryController::class, 'subindex'])->name('admin.subcategories.index');
-            Route::Post('/sub', [CategoryController::class, 'substore'])->name('admin.subcategories.store');
+            Route::Post('/sub/store', [CategoryController::class, 'substore'])->name('admin.subcategories.store');
         });
 
         // Messages Section

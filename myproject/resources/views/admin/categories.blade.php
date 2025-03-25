@@ -99,6 +99,10 @@
         margin: 10px 0;
         padding: 8px;
     }
+     .error-message {
+        color: red;
+        font-size: 14px;
+    }
 </style>
 
 <div class="container">
@@ -115,6 +119,7 @@
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <h2>Add New Category</h2>
+         <div id="errorMessages" class="error-message"></div>
         <input type="text" id="categoryName" placeholder="Category Name" required>
       <select id="mainCategoryId">
          <option value="" disabled selected hidden>Select Main Category</option>
@@ -152,7 +157,7 @@
             .catch(error => console.error("Error fetching categories:", error));
     });
 
-    function openModal() {
+     function openModal() {
         document.getElementById("categoryModal").style.display = "block";
     }
 
@@ -166,8 +171,11 @@
         formData.append("main_category_id", document.getElementById("mainCategoryId").value);
         formData.append("description", document.getElementById("categoryDescription").value);
         formData.append("stock", document.getElementById("categoryStock").value);
-        formData.append("image", document.getElementById("categoryImage").files[0]);
-        
+       const imageInput = document.getElementById("categoryImage");
+        if (imageInput.files.length > 0) {
+                formData.append("image", imageInput.files[0]); // ✅ Ensure a file is sent
+                    }
+
         fetch("{{ route('admin.subcategories.store') }}", {
             method: "POST",
             headers: {
@@ -182,7 +190,15 @@
                 closeModal();
                 location.reload();
             } else {
-                alert("Failed to create category: " + data.message);
+                let errorMessage = "";
+                if (data.error) {
+                    errorMessage = `<p>${data.error}</p>`;
+                } else if (data.errors) {
+                    Object.values(data.errors).forEach(error => {
+                        errorMessage += `<p>${error[0]}</p>`;
+                    });
+                }
+                document.getElementById("errorMessages").innerHTML = errorMessage;
             }
         })
         .catch(error => console.error("Error adding category:", error));
