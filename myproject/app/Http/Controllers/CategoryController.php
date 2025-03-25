@@ -226,7 +226,7 @@ class CategoryController extends Controller
             }
         }
         
-    public function subdestroy(){
+    public function subdestroy($id){
         try {
             $subcategory = SubCategory::findOrFail($id);
     

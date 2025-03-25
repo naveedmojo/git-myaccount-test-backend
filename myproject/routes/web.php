@@ -31,6 +31,8 @@ Route::prefix('admin')->group(function () {
             Route::get('/sub', [CategoryController::class, 'subindex'])->name('admin.subcategories.index');
             Route::Post('/sub/store', [CategoryController::class, 'substore'])->name('admin.subcategories.store');
             Route::post('/sub/update/{id}', [CategoryController::class, 'subupdate'])->name('admin.subcategories.update');
+            Route::delete('/sub/delete/{id}', [CategoryController::class, 'subdestroy'])->name('admin.subcategories.destroy');
+
 
         });
 

@@ -104,19 +104,27 @@
         color: red;
         font-size: 14px;
     }
-   .edit-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-   
-    display: none; /* Hide button by default */
-}
-    .category-card:hover .edit-btn {
-    display: block; /* Show button on hover */
+   .edit-btn, .delete-btn {
+        position: absolute;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: none;
+    }
+    .edit-btn {
+        top: 10px;
+        right: 10px;
+    }
+    .delete-btn {
+        bottom: 10px;
+        right: 10px;
+      
+        color: white;
+    }
+    .category-card:hover .edit-btn,
+    .category-card:hover .delete-btn {
+        display: block;
     }
 
 </style>
@@ -181,6 +189,7 @@
                         card.classList.add("category-card");
                         card.innerHTML = `
                         <button class="edit-btn" onclick="openEditModal(${category.id}, '${category.name}', '${category.description}', ${category.stock}, '/storage/${category.image}',${category.main_category_id})">✏️</button>
+                              <button class="delete-btn" onclick="deleteCategory(${category.id})">🗑️</button>
                             <img src="/storage/${category.image}" alt="${category.name}">
                             <h3>${category.name}</h3>
                             <p>${category.description || 'No description available'}</p>
@@ -293,6 +302,26 @@
     })
     .catch(error => console.error("Error updating category:", error));
 }
+function deleteCategory(categoryId) {
+        if (confirm("Are you sure you want to delete this category?")) {
+            fetch(`/admin/categories/sub/delete/${categoryId}`, {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    alert("Category deleted successfully!");
+                    location.reload();
+                } else {
+                    alert("Error deleting category.");
+                }
+            })
+            .catch(error => console.error("Error deleting category:", error));
+        }
+    }
 
 function openEditModal(id, name, description, stock, image, mainCategoryId) {
     document.getElementById("editCategoryId").value = id;
