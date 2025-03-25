@@ -185,48 +185,47 @@ class CategoryController extends Controller
             ], 500);
         }
         }
-    public function subupdate(Request $request,$id){
-        try {
-            $subcategory = SubCategory::findOrFail($id);
-    
-            $request->validate([
-                'name' => 'sometimes|required|string|max:255',
-                'main_category_id' => 'sometimes|required|exists:main_categories,id',
-                'description' => 'nullable|string',
-                'stock' => 'sometimes|required|integer|min:0',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-            ]);
-    
-            // Handle image update
-            if ($request->hasFile('image')) {
-                // Delete old image if exists
-                if ($subcategory->image) {
-                    Storage::disk('public')->delete($subcategory->image);
+        public function subupdate(Request $request, $id) {
+            try {
+                $subcategory = SubCategory::findOrFail($id);
+        
+                $request->validate([
+                    'name' => 'sometimes|required|string|max:255',
+                    'main_category_id' => 'sometimes|required|exists:main_categories,id',
+                    'description' => 'nullable|string',
+                    'stock' => 'sometimes|required|integer|min:0',
+                    'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+                ]);
+        
+                // Update fields except image
+                $subcategory->update($request->only(['name', 'main_category_id', 'description', 'stock']));
+        
+                // Handle image update
+                if ($request->hasFile('image')) {
+                    // Delete old image if exists
+                    if ($subcategory->image) {
+                        Storage::disk('public')->delete($subcategory->image);
+                    }
+                    // Store new image
+                    $imagePath = $request->file('image')->store('sub_categories', 'public');
+                    $subcategory->update(['image' => $imagePath]); // Update image separately
                 }
-                $subcategory->image = $request->file('image')->store('sub_categories', 'public');
+        
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Subcategory updated successfully',
+                    'data' => $subcategory
+                ], 200);
+            
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Failed to update subcategory',
+                    'error' => $e->getMessage()
+                ], 500);
             }
-    
-            // Update fields
-            $subcategory->update($request->only(['name', 'main_category_id', 'description', 'stock', 'image']));
-    
-            return response()->json([
-                'status' => true,
-                'message' => 'Subcategory updated successfully',
-                'data' => $subcategory
-            ], 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Subcategory not found'
-            ], 404);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to update subcategory',
-                'error' => $e->getMessage()
-            ], 500);
         }
-        }
+        
     public function subdestroy(){
         try {
             $subcategory = SubCategory::findOrFail($id);
