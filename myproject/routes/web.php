@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'login']);
@@ -14,9 +15,13 @@ Route::prefix('admin')->group(function () {
         })->name('admin.dashboard');
 
         // Products Section
-        Route::get('/products', function () {
-            return view('admin.products');
-        })->name('admin.products');
+        Route::prefix('products')->group(function () {
+            Route::get('/', function () {
+                return view('admin.products');
+            })->name('admin.products');
+            Route::get('/products',[ProductController::class,'index'])->name('admin.products.index');
+            Route::post('/products/create',[ProductController::class,'store'])->name('admin.products.store');
+        });
 
         // Categories Section
         Route::prefix('categories')->group(function () {
