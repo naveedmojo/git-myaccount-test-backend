@@ -209,16 +209,17 @@
     function closeModal() {
         document.getElementById("categoryModal").style.display = "none";
     }
-     function openEditModal(id, name, description, stock, image,mainCategoryId) {
-        document.getElementById("editCategoryId").value = id;
-        document.getElementById("editCategoryName").value = name;
-        document.getElementById("editCategoryDescription").value = description;
-        document.getElementById("editCategoryStock").value = stock;
-        document.getElementById("editCategoryImagePreview").src = image;
+    //  function openEditModal(id, name, description, stock, image,mainCategoryId) {
+    //     console.log("open edit model first");
+    //     document.getElementById("editCategoryId").value = id;
+    //     document.getElementById("editCategoryName").value = name;
+    //     document.getElementById("editCategoryDescription").value = description;
+    //     document.getElementById("editCategoryStock").value = stock;
+    //     document.getElementById("editCategoryImagePreview").src = image;
 
-         document.getElementById("editMainCategoryId").value = mainCategoryId;
-        document.getElementById("editCategoryModal").style.display = "block";
-    }
+    //      document.getElementById("editMainCategoryId").value = mainCategoryId;
+    //     document.getElementById("editCategoryModal").style.display = "block";
+    // }
      function closeEditModal() {
         document.getElementById("editCategoryModal").style.display = "none";
     }

@@ -97,33 +97,47 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
         try {
+            $product = Product::findOrFail($id);
             $request->validate([
-                'name' => 'sometimes|string|max:255',
+                'name' => 'sometimes|required|string|max:255',
                 'description' => 'nullable|string',
-                'price' => 'sometimes|numeric',
-                'sub_category_id' => 'sometimes|exists:sub_categories,id',
+                'price' => 'sometimes|required|numeric|min:0',
+                'sub_category_id' => 'sometimes||exists:sub_categories,id',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'is_sold' => 'boolean',
                 'type' => 'nullable|string',
                 'years_used' => 'nullable|integer',
             ]);
 
-            $data = $request->all();
+            $product->update($request->only(['name', 'sub_category_id', 'description', 'price','is_sold','type','years_used']));
 
             if ($request->hasFile('image')) {
+                // Delete old image if exists
                 if ($product->image) {
                     Storage::disk('public')->delete($product->image);
                 }
-                $data['image'] = $request->file('image')->store('products', 'public');
+                // Store new image
+                $imagePath = $request->file('image')->store('products', 'public');
+                $product->update(['image' => $imagePath]); // Update image separately
             }
+    
 
-            $product->update($data);
-            return response()->json(['success' => true, 'message' => 'Product updated successfully', 'data' => $product], Response::HTTP_OK);
-        } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Failed to update product', 'error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            
+            return response()->json([
+                'status' => true,
+                'message' => 'Product updated successfully',
+                'data' => $product
+            ], 200);
+        
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to update product',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 

@@ -21,6 +21,7 @@ Route::prefix('admin')->group(function () {
             })->name('admin.products');
             Route::get('/products',[ProductController::class,'index'])->name('admin.products.index');
             Route::post('/products/create',[ProductController::class,'store'])->name('admin.products.store');
+            Route::post('/product/update/{id}',[ProductController::class,'update'])->name('admin.products.update');
         });
 
         // Categories Section
