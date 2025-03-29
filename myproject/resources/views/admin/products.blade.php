@@ -211,12 +211,9 @@
         <label for="subCategoryId">Sub Category:</label>
         <select id="subCategoryId">
             <option value="" disabled selected hidden>Select Sub Category</option>
-            <option value="1">PS4 Consoles</option>
-            <option value="2">PS4 Games</option>
-            <option value="3">PS4 Accessories</option>
-            <option value="4">PS5 Consoles</option>
-            <option value="5">PS5 Games</option>
-            <option value="6">PS5 Accessories</option>
+            @foreach(\App\Models\SubCategory::all() as $subCategory)
+            <option value="{{ $subCategory->id }}">{{ $subCategory->name }}</option>
+             @endforeach
         </select>
 
         <!-- Description -->
@@ -273,12 +270,9 @@
         <label for="editSubCategoryId">Sub Category:</label>
         <select id="editSubCategoryId">
             <option value="" disabled selected hidden>Select Sub Category</option>
-            <option value="1">PS4 Consoles</option>
-            <option value="2">PS4 Games</option>
-            <option value="3">PS4 Accessories</option>
-            <option value="4">PS5 Consoles</option>
-            <option value="5">PS5 Games</option>
-            <option value="6">PS5 Accessories</option>
+             @foreach(\App\Models\SubCategory::all() as $subCategory)
+            <option value="{{ $subCategory->id }}">{{ $subCategory->name }}</option>
+             @endforeach
         </select>
 
         <!-- Description -->

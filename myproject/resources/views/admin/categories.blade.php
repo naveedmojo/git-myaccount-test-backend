@@ -147,8 +147,9 @@
         <input type="text" id="categoryName" placeholder="Category Name" required>
       <select id="mainCategoryId">
          <option value="" disabled selected hidden>Select Main Category</option>
-         <option value="1">Main Category 1 (ps4)</option>
-        <option value="2">Main Category 2 (ps5)</option>
+         @foreach(\App\Models\MainCategory::all() as $category)
+        <option value="{{ $category->id }}">{{ $category->name }}</option>
+         @endforeach
     </select>
         <input type="text" id="categoryDescription" placeholder="Description">
         <input type="number" id="categoryStock" placeholder="Stock" required>
@@ -166,8 +167,9 @@
         <input type="text" id="editCategoryName" placeholder="Category Name" required>
          <select id="editMainCategoryId">
             <option value="" disabled selected hidden>Select Main Category</option>
-            <option value="1">Main Category 1 (PS4)</option>
-            <option value="2">Main Category 2 (PS5)</option>
+            @foreach(\App\Models\MainCategory::all() as $category)
+             <option value="{{ $category->id }}">{{ $category->name }}</option>
+             @endforeach
         </select>
         <input type="text" id="editCategoryDescription" placeholder="Description">
         <input type="number" id="editCategoryStock" placeholder="Stock" required>
