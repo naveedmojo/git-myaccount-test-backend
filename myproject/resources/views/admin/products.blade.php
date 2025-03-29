@@ -336,7 +336,7 @@
                         <td><img src="/storage/${product.image}" alt="${product.name}"></td>
                         <td>${product.name}</td>
                         <td>${product.description}</td>
-                        <td>$${parseFloat(product.price).toFixed(2)}</td>
+                        <td>₹${parseFloat(product.price)}</td>
                         <td>${new Date(product.created_at).toISOString().split('T')[0]}</td>
                         <td>
                              <button class="edit-btn" onclick="openEditModal(${product.id}, '${product.name}', '${product.description}', ${product.price}, '/storage/${product.image}',${product.sub_category_id},'${product.type}',${product.is_sold},${product.years_used})">edit</button>
@@ -450,7 +450,7 @@
             }
 
             fetch(`/admin/products/product/update/${productId}`, { 
-                method: "POST", // Change to PUT if your route supports it
+                method: "POST", 
                 headers: {
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },

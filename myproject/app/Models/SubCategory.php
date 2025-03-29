@@ -33,7 +33,7 @@ class SubCategory extends Model
      */
     public static function getTotalSubCategories()
     {
-        return response()->json(['total_sub_categories' => self::count()]);
+        return self::count();
     }
 
     /**

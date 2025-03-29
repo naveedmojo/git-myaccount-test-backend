@@ -28,7 +28,7 @@
             <div class="card text-white bg-warning shadow">
                 <div class="card-body">
                     <h5 class="card-title">Total Products</h5>
-                    <p class="card-text fs-3">{{ $totalProducts ?? 0 }}</p>
+                    <p class="card-text fs-3">{{ \App\Models\Product::totalProducts() }}</p>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
             <div class="card text-white bg-danger shadow">
                 <div class="card-body">
                     <h5 class="card-title">Total Categories</h5>
-                    <p class="card-text fs-3">{{ $totalCategories ?? 0 }}</p>
+                     <p class="card-text fs-3">{{ \App\Models\SubCategory::getTotalSubCategories() }}</p>
                 </div>
             </div>
         </div>

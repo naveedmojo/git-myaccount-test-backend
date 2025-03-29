@@ -15,4 +15,7 @@ class Product extends Model
     {
         return $this->belongsTo(SubCategory::class);
     }
+    public static function totalProducts(){
+        return self::count();
+    } 
 }
