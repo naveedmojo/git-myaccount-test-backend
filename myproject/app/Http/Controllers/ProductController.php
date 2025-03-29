@@ -71,7 +71,53 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            // Validate request
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'sub_category_id' => 'required|exists:sub_categories,id',
+                'description' => 'nullable|string',
+                'price' => 'required|integer|min:0',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', 
+                'is_sold' => 'boolean',
+                'type' => 'nullable|string',
+                'years_used' => 'nullable|integer',
+                
+                // Max 2MB
+            ]);
+    
+            // Handle image upload
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('products', 'public');
+            }
+    
+            // Create subcategory
+            $product = Product::create([
+                'name' => $request->name,
+                'sub_category_id' => $request->sub_category_id,
+                'description' => $request->description,
+                'price' => $request->price,
+                'image' => $imagePath,
+                'is_sold' => $request->is_sold,
+                'type' => $request->type,
+                'years_used' => $request->years_used,
+
+            ]);
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'Product created successfully!',
+                'data' => $product
+            ], 201);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Error creating product!',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -144,16 +190,33 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
         try {
+            $product = Product::findOrFail($id);
+            // Delete image if exists
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
+    
             $product->delete();
-            return response()->json(['success' => true, 'message' => 'Product deleted successfully'], Response::HTTP_OK);
-        } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Failed to delete product', 'error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'product deleted successfully'
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'product not found'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to delete product',
+                'error' => $e->getMessage()
+            ], 500);
         }
+        
     }
 }

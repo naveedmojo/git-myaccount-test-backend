@@ -170,7 +170,7 @@
     <div class="container">
         <div class="header">
             <h2>Products</h2>
-            <a href="{{ route('admin.products.store') }}" class="button">+ Add Product</a>
+            <button class="add-product-btn" onclick="openModal()">➕ Add New Product</button>
         </div>
         
         <table>
@@ -195,25 +195,62 @@
         </div>
     </div>
 
-    <div id="productModal" class="modal">
+   <div id="productModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <h2>Add New Category</h2>
-         <div id="errorMessages" class="error-message"></div>
+        <h2>Add New Product</h2>
+
+        <!-- Error Messages -->
+        <div id="errorMessages" class="error-message"></div>
+
+        <!-- Product Name -->
+        <label for="productName">Product Name:</label>
         <input type="text" id="productName" placeholder="Product Name" required>
-      <select id="subCategoryId">
-          <option value="" disabled selected hidden>Select Sub Category</option>
-            <option value="1">ps4 consoles </option>
-            <option value="2">ps4 games</option>
-             <option value="3">ps4 accesories</option>
-            <option value="4">ps5 consoles</option>
-             <option value="5">ps5 games</option>
-            <option value="6">ps5 accesories</option>
-    </select>
-        <input type="text" id="prductDescription" placeholder="Description">
-        <input type="number" id="productprice" placeholder="price" required>
+
+        <!-- Sub Category -->
+        <label for="subCategoryId">Sub Category:</label>
+        <select id="subCategoryId">
+            <option value="" disabled selected hidden>Select Sub Category</option>
+            <option value="1">PS4 Consoles</option>
+            <option value="2">PS4 Games</option>
+            <option value="3">PS4 Accessories</option>
+            <option value="4">PS5 Consoles</option>
+            <option value="5">PS5 Games</option>
+            <option value="6">PS5 Accessories</option>
+        </select>
+
+        <!-- Description -->
+        <label for="productDescription">Description:</label>
+        <input type="text" id="productDescription" placeholder="Description">
+
+        <!-- Price -->
+        <label for="productPrice">Price ($):</label>
+        <input type="number" id="productPrice" placeholder="Price" required>
+
+        <!-- Product Type -->
+        <label for="productType">Product Type:</label>
+        <input type="text" id="productType" placeholder="Product Type">
+
+        <!-- Is Sold -->
+        <label for="productIsSold">Is Sold:</label>
+        <select id="productIsSold">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+
+        <!-- Years Used -->
+        <label for="productYearsUsed">Years Used:</label>
+        <input type="number" id="productYearsUsed" placeholder="Years Used">
+
+        <!-- Image Upload -->
+        <label for="productImage">Product Image:</label>
         <input type="file" id="productImage" accept="image/*" required>
-        <button onclick="submitproduct()">Submit</button>
+
+        <!-- Image Preview -->
+        <img id="productImagePreview" src="" alt="Product Image" style="max-width: 100px; display: block; margin: auto;">
+
+        <!-- Submit Button -->
+        <button onclick="submitProduct()">Submit</button>
     </div>
 </div>
 
@@ -309,7 +346,7 @@
                         <td>${new Date(product.created_at).toISOString().split('T')[0]}</td>
                         <td>
                              <button class="edit-btn" onclick="openEditModal(${product.id}, '${product.name}', '${product.description}', ${product.price}, '/storage/${product.image}',${product.sub_category_id},'${product.type}',${product.is_sold},${product.years_used})">edit</button>
-                              <button class="delete-btn" onclick="deleteproduct(${product.id})">🗑️</button>
+                              <button class="delete-btn" onclick="deleteProduct(${product.id})">🗑️</button>
                         </td>
                     </tr>
                 `;
@@ -355,17 +392,24 @@
     
 
     function submitProduct() {
+        console.log("reached submit prooduct");
         const formData = new FormData();
         formData.append("name", document.getElementById("productName").value);
         formData.append("sub_category_id", document.getElementById("subCategoryId").value);
         formData.append("description", document.getElementById("productDescription").value);
         formData.append("price", document.getElementById("productPrice").value);
+        formData.append("type",document.getElementById("editProductType").value);
+        formData.append("is_sold",document.getElementById("editProductIsSold").value);
+        formData.append("years_used",document.getElementById("editProductYearsUsed").value);
+
+
+
        const imageInput = document.getElementById("productImage");
         if (imageInput.files.length > 0) {
                 formData.append("image", imageInput.files[0]); // ✅ Ensure a file is sent
                     }
 
-        fetch("{{ route('admin.subcategories.store') }}", {
+        fetch("{{ route('admin.products.store') }}", {
             method: "POST",
             headers: {
                 "X-CSRF-TOKEN": "{{ csrf_token() }}"
@@ -375,7 +419,7 @@
         .then(response => response.json())
         .then(data => {
             if (data.status) {
-                alert("Category created successfully!");
+                alert("Product created successfully!");
                 closeModal();
                 location.reload();
             } else {
@@ -390,7 +434,7 @@
                 document.getElementById("errorMessages").innerHTML = errorMessage;
             }
         })
-        .catch(error => console.error("Error adding category:", error));
+        .catch(error => console.error("Error adding Product:", error));
     }
        function updateProduct() {
                 
@@ -438,9 +482,10 @@
             })
             .catch(error => console.error("Error updating product:", error));
         }
-function deleteCategory(categoryId) {
-        if (confirm("Are you sure you want to delete this category?")) {
-            fetch(`/admin/categories/sub/delete/${categoryId}`, {
+function deleteProduct(productId) {
+    
+        if (confirm("Are you sure you want to delete this product?")) {
+            fetch(`/admin/products/product/delete/${productId}`, {
                 method: "DELETE",
                 headers: {
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
@@ -449,13 +494,14 @@ function deleteCategory(categoryId) {
             .then(response => response.json())
             .then(data => {
                 if (data.status) {
-                    alert("Category deleted successfully!");
+                    alert("Product deleted successfully!");
                     location.reload();
                 } else {
-                    alert("Error deleting category.");
+                    alert("Error deleting product.");
+                  
                 }
             })
-            .catch(error => console.error("Error deleting category:", error));
+            .catch(error => console.error("Error deleting product:", error));
         }
     }
 
