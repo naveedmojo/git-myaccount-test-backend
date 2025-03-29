@@ -16,8 +16,34 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         try {
-            $products = Product::with('subCategory')->paginate(10);
-    
+             // Validate incoming filters
+                $request->validate([
+                 'category_id' => 'nullable|integer|exists:sub_categories,id',
+                 'sort_by' => 'nullable|in:low_high,high_low,latest',
+                 ]);
+
+                // Start query
+                $query = Product::with('subCategory');
+
+                // Apply category filter if provided
+                 if ($request->has('category_id') && !empty($request->category_id)) {
+                    $query->where('sub_category_id', $request->category_id);
+                 }
+
+                 if ($request->has('sort_by')) {
+                    if ($request->sort_by === 'low_high') {
+                        $query->orderBy('price', 'asc');
+                    } elseif ($request->sort_by === 'high_low') {
+                        $query->orderBy('price', 'desc');
+                    } elseif ($request->sort_by === 'latest') {
+                        $query->orderBy('created_at', 'desc'); // Sort by latest products
+                    }
+                } else {
+                    $query->orderBy('created_at', 'desc'); // Default sorting by latest
+                }
+
+                 // Paginate results
+                $products = $query->paginate(10);
             return response()->json([
                 'success' => true,
                 'data' => $products->items(),

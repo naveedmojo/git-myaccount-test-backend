@@ -67,8 +67,8 @@
 
         
         img {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             object-fit: cover;
             border-radius: 8px;
             border: 2px solid #ddd;
@@ -165,11 +165,54 @@
         color: red;
         font-size: 14px;
     }
+
+
+    /* Category Filter Positioned to Right */
+    .filter-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-container label {
+        font-weight: bold;
+    }
+
+    .filter-container select {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: auto;  /* Adjust width based on text size */
+    min-width: 120px;  /* Prevent it from being too small */
+    max-width: 250px;  /* Prevent it from being too large */
+}
+
     </style>
 
     <div class="container">
         <div class="header">
             <h2>Products</h2>
+
+             <div class="filter-container">
+            <label for="categoryFilter">Filter by Category:</label>
+            <select id="categoryFilter" onchange="fetchProducts()">
+                <option value="">All Categories</option>
+                @foreach(\App\Models\SubCategory::all() as $category)
+                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+
+
+            <!-- Sort By Filter -->
+            <label for="sortByFilter">Sort By:</label>
+            <select id="sortByFilter" onchange="fetchProducts()">
+                <option value="">Default (Latest)</option>
+                <option value="latest">Latest Products</option>
+                <option value="low_high">Price: Low to High</option>
+                <option value="high_low">Price: High to Low</option>
+            </select>
+             </div>
+
             <button class="add-product-btn" onclick="openModal()">➕ Add New Product</button>
         </div>
         
@@ -313,12 +356,18 @@
 
     <script>
    document.addEventListener('DOMContentLoaded', function () {
-    fetchProducts();
+    window.fetchProducts = function (page = 1) {
+         const categoryId = document.getElementById('categoryFilter').value;
+          const sortBy = document.getElementById('sortByFilter').value; 
+ 
+         let url = `{{ route('admin.products.index') }}?page=${page}`;
 
-    function fetchProducts(page = 1) {
-        fetch(`{{ route('admin.products.index') }}?page=${page}`, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
+         if (categoryId) url += `&category_id=${categoryId}`;
+         if (sortBy) url += `&sort_by=${sortBy}`;
+
+        fetch(url, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+         })
         .then(response => response.json())
         .then(data => {
             let tbody = document.getElementById('product-table-body');
@@ -373,6 +422,7 @@
             });
         }
     }
+     fetchProducts(); 
 });
 
       function openModal() {
@@ -521,6 +571,11 @@ function closeEditModal() {
     document.getElementById("editProductModal").style.display = "none";
 }
 
+function filterProductsByCategory(){
+     let categoryId = document.getElementById('categoryFilter').value;
+     fetchProducts()
+    console.log(categoryId);
+}
 
 </script>
 
