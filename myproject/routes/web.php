@@ -3,6 +3,46 @@
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+
+
+
+
+//front end public routes
+Route::get('/', function () {
+    return view('frontend.index');
+})->name('home');
+
+Route::get('/about', function () {
+    return view('frontend.about');
+})->name('about');
+
+Route::get('/contact',function(){
+    return view('frontend.contact');
+})->name('contact');
+
+Route::get('/shop',function(){
+    return view('frontend.shop');
+})->name('shop');
+
+Route::get('/cart',function(){
+    return view('frontend.cart');
+})->name('cart');
+
+
+Route::get('/checkout',function(){
+    return view('frontend.checkout');
+})->name('checkout');
+
+Route::get('/shop-single',function(){
+    return view('frontend.shop-single');
+})->name('shop-single');
+
+Route::get('/thankyou',function(){
+    return view('frontend.thankyou');
+})->name('thankyou');
+
+
+
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'login']);
